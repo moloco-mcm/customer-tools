@@ -20,19 +20,31 @@ PLATFORM_NAME = ''
 PLATFORM_ID = ''
 API_KEY = ''
 
-URL = 'https://'+ PLATFORM_NAME +'-dcsn.rmp-api.moloco.com/rmp/decision/v1/platforms/' + PLATFORM_ID + '/creative-auction'
+URL = 'https://' + PLATFORM_NAME + '-dcsn.rmp-api.moloco.com/rmp/decision/v1/platforms/' + PLATFORM_ID + '/auction'
 
 # Insert INVENTORY_ID. 
 INVENTORY_ID = ''
 
+
 PAYLOAD = {
     "request_id": "", # Required. A unique identifier of the request. Short UUID (16) will be perfectly fit with it.
+    "session_id": "", # Required. Session ID from the user session.
     "user": {
         "user_id": "", # Required. User ID that matches with the user ID of the events.
+        "year_of_birth": 2000, # Optional
+        "gender": "" # Male / Female - optional
+    },
+    "device": {
+        "unique_device_id": "" # Optional
     },
     "inventory": {
-        "inventory_id": INVENTORY_ID, # Required.   
+        "inventory_id": INVENTORY_ID, # Required. 
+        "num_items": 50, # Required. It's highly recommended to set this value under 50.
+        "items": [ "001", "002" ], # In case the ad items should be related to certain items, please put id of the certain item at here.
+        "categories": [ "Women>Shoes>Sneakers", "Asia>Seoul" ], # In case the ad items should be related to certain category, please use this field.
+        "search_query": "" # If the inventory is at the search result page, this field is required.
     },
+    "page_id": "" # 
 }
 
 HEADERS = {
@@ -49,7 +61,14 @@ def main():
 
     print("\nResponse body:")
     responded_items = json.loads(response.text)
-    print(json.dumps(dict(responded_items), indent=4))
+    list_of_items = []
+    for items in responded_items["decided_items"]:
+        print(json.dumps(items, indent=4))
+        list_of_items.append(items["item_id"])
+    
+    
+    print("\nTotal", len(list_of_items), "items returned")
+    print("Item IDs are:", list_of_items)
 
     return(response)
 
