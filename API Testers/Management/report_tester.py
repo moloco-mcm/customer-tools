@@ -16,11 +16,11 @@ import json
 import requests
 
 PLATFORM_NAME = "" # Platform name. e.g. MOLOCO
-PLATFORM = "" # Platform ID e.g. MOLOCO_TEST
+PLATFORM_ID = "" # Platform ID e.g. MOLOCO_TEST
 
 # Provide PLATFORM_OWNER credential to get token and call management APIs
 EMAIL = ""
-PW = ""
+PWD = ""
 
 # Specify ad account id to get report from. If it is empty, QueryPlatformSummary will be called.
 AD_ACCOUNT_ID = "" 
@@ -35,12 +35,11 @@ DATE_END = "2023-06-18"
 GROUP_BY = ["DATE", "CURRENCY"]
 ORDER_BY = ["TIME_DATE"]
 
-URL = "https://" + PLATFORM_NAME + "-mgmt.rmp-api.moloco.com/rmp/mgmt/v1/platforms/" + PLATFORM 
+BASE_URL = "https://{NAME}-mgmt.rmp-api.moloco.com/rmp/mgmt/v1/platforms/{ID}".format(NAME=PLATFORM_NAME, ID=PLATFORM_ID)
 
-# Get token based on the credential
+
 def CreateToken(base_url, email, pw):
     url = base_url + "/tokens"
-    print(url)
     payload = {
         "auth_type": "CREDENTIAL",
         "credential_type_payload": {
@@ -55,7 +54,7 @@ def CreateToken(base_url, email, pw):
     response = requests.post(url, json=payload, headers=headers)
     json_formatted = json.loads(response.text)
     print(json.dumps(json_formatted,indent=4))
-    return(json_formatted["token"])
+    return (json_formatted['token'])
 
 # To query report for an ad account
 def QueryAdAccountSummary(base_url, token, ad_account_id):
@@ -94,16 +93,16 @@ def QueryPlatformSummary(base_url, token):
 
 def main():
     # Get token to call management APIs
-    token = CreateToken(URL, EMAIL, PW)
+    token = CreateToken(BASE_URL, EMAIL, PWD)
 
     # If the ad account id is not provided, then call QueryPlatformSummary. 
     # Else call QueryAdAccountSummary with given ad account id.
     if AD_ACCOUNT_ID == "": 
-        response = QueryPlatformSummary(URL, token)
+        response = QueryPlatformSummary(BASE_URL, token)
         json_formatted = json.loads(response)
         print(json.dumps(json_formatted,indent=4))
     else:
-        response = QueryAdAccountSummary(URL, token, AD_ACCOUNT_ID)
+        response = QueryAdAccountSummary(BASE_URL, token, AD_ACCOUNT_ID)
         json_formatted = json.loads(response)
         print(json.dumps(json_formatted,indent=4))
 
