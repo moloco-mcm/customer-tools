@@ -108,7 +108,7 @@ def BulkUpdateCampaignsFromFile(token):
         print(UpdateCampaign(BASE_URL, ad_account_id, campaign_id, loaded_payload, token))
         print("*********************************************")
 
-    return("Total {0} items are updated.".format(row_num))
+    return("Total {0} items are updated.".format(row_num+1))
 
 
 def main():

@@ -138,7 +138,7 @@ def BulkCreateCampaignsFromFile(token):
         print(CreateCampaign(BASE_URL, ad_account_id, campaign_title, goal_setting,
                        daily_budget, schedule_start, schedule_end, items, enabling_state, token))
         print("*********************************************")
-    return("Total {0} items are created.".format(row_num))
+    return("Total {0} items are created.".format(row_num+1))
 
 
 def main():
